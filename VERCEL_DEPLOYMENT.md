@@ -5,9 +5,24 @@ This guide explains how to deploy the Per Diem application to Vercel with a unif
 ## Architecture
 
 The application uses a monorepo structure with:
-- **Frontend**: React + Vite (deployed as static site)
-- **Backend**: Express API (deployed as Vercel Serverless Functions)
-- **Unified Environment**: Single `.env` file at the root
+- **Frontend**: React + Vite (deployed as static site from `client/dist`)
+- **Backend**: Express API in `server/src/` (compiled to `server/dist/`)
+- **API Wrapper**: Thin serverless function in `api/index.js` that imports the compiled server
+- **Unified Environment**: Single `.env` file at the root for local development
+
+### How It Works
+
+1. **Local Development**: 
+   - Backend runs on port 3002 from `server/src/`
+   - Frontend runs on port 5175 with Vite proxy
+   - Environment variables loaded from root `.env`
+
+2. **Vercel Deployment**:
+   - Build process compiles TypeScript: `server/src/` → `server/dist/`
+   - `api/index.js` imports the compiled Express app from `server/dist/server.js`
+   - Vercel treats `api/index.js` as a serverless function
+   - All API routes (`/api/*`) are handled by this function
+   - Frontend static files served from `client/dist`
 
 ## Prerequisites
 
@@ -60,33 +75,61 @@ In your Vercel project dashboard:
 
 ## Step 2: Vercel Configuration
 
-The `vercel.json` file is already configured:
+The `vercel.json` file is configured to:
 
 ```json
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build:all",
   "outputDirectory": "client/dist",
+  "installCommand": "npm install && npm install --workspace=server && npm install --workspace=client",
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "/api/:path*"
+      "destination": "/api/index.js"
     }
   ],
   "functions": {
-    "api/**/*.js": {
+    "api/index.js": {
       "memory": 1024,
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "server/dist/**"
     }
   }
 }
 ```
 
 This configuration:
-- Builds both frontend and backend
+- Installs all workspace dependencies
+- Builds both server (TypeScript → JavaScript) and client (Vite build)
 - Serves frontend from `client/dist`
-- Routes `/api/*` requests to serverless functions
+- Routes `/api/*` requests to the serverless function at `api/index.js`
+- Includes compiled server files (`server/dist/**`) in the serverless function
 - Allocates 1GB memory and 10s timeout for API functions
+
+### Project Structure for Vercel
+
+```
+perdiem-monorepo/
+├── api/
+│   └── index.js              # Serverless function wrapper (imports server/dist/server.js)
+├── server/
+│   ├── src/                  # TypeScript source code
+│   │   ├── server.ts         # Main Express app (exports app)
+│   │   ├── services/         # Square API integration
+│   │   ├── middleware/       # Error handling, logging
+│   │   └── config/           # Environment configuration
+│   ├── dist/                 # Compiled JavaScript (created during build)
+│   │   └── server.js         # Compiled Express app
+│   └── package.json
+├── client/
+│   ├── src/                  # React source code
+│   ├── dist/                 # Built static files (created during build)
+│   └── package.json
+├── .env                      # Environment variables (local only, not committed)
+├── vercel.json               # Vercel configuration
+└── package.json              # Root package.json with build scripts
+```
 
 ## Step 3: Deploy to Vercel
 
@@ -146,9 +189,13 @@ curl "$VERCEL_URL/api/catalog/categories?location_id=YOUR_LOCATION_ID"
 
 **Solutions**:
 1. Verify `api/index.js` exists and is committed to git
-2. Check Vercel build logs for errors
-3. Ensure environment variables are set in Vercel dashboard
-4. Redeploy the application
+2. Verify `server/dist/` folder is created during build (check build logs)
+3. Check that `server/src/server.ts` exports the app: `export const app = express();`
+4. Ensure environment variables are set in Vercel dashboard
+5. Check Vercel build logs for TypeScript compilation errors
+6. Verify the build command runs: `npm run build:all`
+7. Test locally: `npm run build:all` then check if `server/dist/server.js` exists
+8. Redeploy the application
 
 ### Square API Errors
 
