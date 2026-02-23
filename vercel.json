@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:all",
+  "buildCommand": "cd server && npm install && npm run build && cd ../client && npm install && npm run build",
   "outputDirectory": "client/dist",
-  "installCommand": "npm install && npm install --workspace=server && npm install --workspace=client",
   "rewrites": [
     {
       "source": "/api/:path*",

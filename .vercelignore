@@ -1,0 +1,26 @@
+# Tests
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.test.js
+*.test.ts
+*.test.tsx
+
+# Development files
+*.md
+!README.md
+.env.example
+.env.local
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log
+logs
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
