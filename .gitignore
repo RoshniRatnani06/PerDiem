@@ -10,8 +10,6 @@ server/dist/
 build/
 
 # Environment variables
-.env
-.env.local
 .env.*.local
 client/.env
 server/.env
@@ -29,7 +27,6 @@ lerna-debug.log*
 Thumbs.db
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -43,3 +40,7 @@ coverage/
 .cache/
 .temp/
 .tmp/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+config.bat

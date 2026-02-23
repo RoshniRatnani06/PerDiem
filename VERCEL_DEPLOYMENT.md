@@ -136,13 +136,13 @@ perdiem-monorepo/
 ### Option A: Deploy via Vercel CLI
 
 ```bash
-# Install Vercel CLI
+# Install Vercel CLI (if not already installed)
 npm i -g vercel
 
 # Login to Vercel
 vercel login
 
-# Deploy
+# Deploy to preview
 vercel
 
 # Deploy to production
@@ -151,17 +151,41 @@ vercel --prod
 
 ### Option B: Deploy via Git Integration
 
-1. Push your code to GitHub/GitLab/Bitbucket
-2. Go to [vercel.com](https://vercel.com)
-3. Click **Add New Project**
-4. Import your repository
-5. Configure project:
+1. **Push your code to GitHub/GitLab/Bitbucket**
+   ```bash
+   git add .
+   git commit -m "Configure for Vercel deployment"
+   git push origin main
+   ```
+
+2. **Go to [vercel.com](https://vercel.com)**
+
+3. **Click "Add New Project"**
+
+4. **Import your repository**
+
+5. **Configure project settings:**
    - **Framework Preset**: Other
    - **Root Directory**: `./` (leave as root)
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `client/dist`
-6. Add environment variables (see Step 1)
-7. Click **Deploy**
+   - **Build Command**: Leave empty (uses vercel.json)
+   - **Output Directory**: Leave empty (uses vercel.json)
+   - **Install Command**: Leave empty (uses default npm install)
+
+6. **Add environment variables** (see Step 1 above):
+   - `SQUARE_ACCESS_TOKEN`
+   - `SQUARE_ENVIRONMENT`
+   - `SQUARE_APPLICATION_ID`
+   - `VITE_USE_MOCK_DATA`
+   - `VITE_API_BASE_URL`
+
+7. **Click "Deploy"**
+
+### Important Notes
+
+- Vercel will automatically run `npm install` for the monorepo
+- The build command `npm run build:all` compiles both server and client
+- The `api/index.js` file imports the compiled server from `server/dist/`
+- All dependencies are installed from the workspace package.json files
 
 ## Step 4: Verify Deployment
 
