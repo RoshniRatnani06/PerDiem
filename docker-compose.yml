@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: perdiem-backend
+    ports:
+      - '3002:3002'
+    env_file:
+      - ./server/.env
+    environment:
+      PORT: 3002
+      NODE_ENV: development
+    restart: unless-stopped
+    networks:
+      - perdiem-network
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: perdiem-frontend
+    ports:
+      - '5175:5175'
+    depends_on:
+      - backend
+    environment:
+      VITE_USE_MOCK_DATA: 'false'
+      VITE_API_BASE_URL: 'http://backend:3002/api'
+    restart: unless-stopped
+    networks:
+      - perdiem-network
+
+networks:
+  perdiem-network:
+    driver: bridge

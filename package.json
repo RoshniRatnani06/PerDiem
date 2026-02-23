@@ -1,0 +1,46 @@
+{
+  "name": "perdiem-monorepo",
+  "version": "1.0.0",
+  "description": "Per Diem Restaurant Menu Application - Full Stack Monorepo",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"SERVER,CLIENT\" --prefix-colors \"blue,green\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "build:server": "npm run build --workspace=server",
+    "build:all": "npm run build:server && npm run build",
+    "start": "npm run start --workspace=server",
+    "test": "npm run test --workspace=server && npm run test --workspace=client",
+    "test:server": "npm run test --workspace=server",
+    "test:client": "npm run test --workspace=client",
+    "install:all": "npm install && npm install --workspace=server && npm install --workspace=client",
+    "clean": "rimraf client/node_modules server/node_modules node_modules client/dist server/dist",
+    "lint": "npm run lint --workspace=client",
+    "docker:dev": "docker-compose up --build",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "restaurant",
+    "menu",
+    "square",
+    "pos",
+    "react",
+    "express",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC"
+}
