@@ -387,6 +387,9 @@ npm run <script> --workspace=client
 npm run <script> --workspace=server
 ```
 
+## Screenshot
+![alt text](image.png)
+
 ## 📄 License
 
 This project is for evaluation purposes as part of the Per Diem coding challenge.
