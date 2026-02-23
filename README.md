@@ -89,8 +89,8 @@ npm install
 npm run install:all
 
 # 3. Set up environment variables
-cp server/.env.example server/.env
-# Edit server/.env and add your SQUARE_ACCESS_TOKEN
+cp .env.example .env
+# Edit .env and add your SQUARE_ACCESS_TOKEN
 
 # 4. Start both frontend and backend together
 npm run dev
@@ -104,8 +104,8 @@ npm run dev
 
 ```bash
 # 1. Set up environment variables
-cp server/.env.example server/.env
-# Edit server/.env and add your SQUARE_ACCESS_TOKEN
+cp .env.example .env
+# Edit .env and add your SQUARE_ACCESS_TOKEN
 
 # 2. Start everything with Docker
 npm run docker:dev
@@ -120,7 +120,6 @@ npm run docker:dev
 ```bash
 # Terminal 1 — Backend
 cd server
-cp .env.example .env        # Add your SQUARE_ACCESS_TOKEN
 npm install
 npm run dev                 # → http://localhost:3002
 
@@ -128,6 +127,8 @@ npm run dev                 # → http://localhost:3002
 cd client
 npm install
 npm run dev                 # → http://localhost:5175
+
+# Note: Environment variables are read from root .env file
 ```
 
 ## 📜 Available Scripts
@@ -202,26 +203,34 @@ npm run test:client
 
 ## 🔧 Configuration
 
-### Backend Environment Variables (`server/.env`)
+### Environment Variables
+
+All environment variables are now managed in a single `.env` file at the root of the project.
 
 ```bash
-# Required
+# Copy the example file
+cp .env.example .env
+
+# Edit with your Square credentials
+```
+
+**Required Variables:**
+
+```bash
+# Square API Configuration
 SQUARE_ACCESS_TOKEN=your_square_sandbox_or_production_token
 SQUARE_ENVIRONMENT=sandbox  # or 'production'
+SQUARE_APPLICATION_ID=your_square_application_id
 
-# Optional
+# Server Configuration
 PORT=3002
-```
 
-### Frontend Environment Variables (`client/.env`)
-
-```bash
-# Optional - for demo mode without backend
+# Client Configuration (Vite)
 VITE_USE_MOCK_DATA=false  # Set to 'true' for offline development
-
-# Optional - API base URL (defaults to /api which is proxied by Vite)
-VITE_API_BASE_URL=/api
+VITE_API_BASE_URL=/api    # API base URL (proxied by Vite in dev)
 ```
+
+For Vercel deployment, see [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) for detailed instructions on setting environment variables.
 
 ## 🌐 API Endpoints
 
@@ -270,6 +279,15 @@ Returns category summaries with item counts.
 
 ## 🚢 Production Deployment
 
+### Vercel Deployment (Recommended)
+
+This project is optimized for Vercel deployment with serverless functions. See the comprehensive [Vercel Deployment Guide](VERCEL_DEPLOYMENT.md) for detailed instructions.
+
+Quick steps:
+1. Set environment variables in Vercel dashboard (see `.env.example`)
+2. Connect your Git repository to Vercel
+3. Deploy with automatic builds on push
+
 ### Build for Production
 
 ```bash
@@ -284,6 +302,7 @@ npm run build        # Builds frontend to client/dist/
 ### Deploy Backend
 
 The backend can be deployed to:
+- **Vercel**: Serverless functions (recommended, see [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md))
 - **Railway**: Node.js support, automatic HTTPS
 - **Render**: Free tier available
 - **Heroku**: Classic PaaS
@@ -292,7 +311,7 @@ The backend can be deployed to:
 ### Deploy Frontend
 
 The frontend can be deployed to:
-- **Vercel**: Optimized for Vite/React
+- **Vercel**: Optimized for Vite/React (recommended)
 - **Netlify**: Easy static hosting
 - **Cloudflare Pages**: Fast global CDN
 

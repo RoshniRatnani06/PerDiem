@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
+import path from 'path';
 
-dotenv.config();
+// Load environment variables from root .env file
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 const envSchema = z.object({
     PORT: z.string().default('3002'),

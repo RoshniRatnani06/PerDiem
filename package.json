@@ -11,9 +11,10 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"SERVER,CLIENT\" --prefix-colors \"blue,green\"",
     "dev:server": "npm run dev --workspace=server",
     "dev:client": "npm run dev --workspace=client",
-    "build": "npm run build --workspace=client",
+    "build": "npm run build:server && npm run build --workspace=client",
     "build:server": "npm run build --workspace=server",
-    "build:all": "npm run build:server && npm run build",
+    "build:client": "npm run build --workspace=client",
+    "build:all": "npm run build:server && npm run build:client",
     "start": "npm run start --workspace=server",
     "test": "npm run test --workspace=server && npm run test --workspace=client",
     "test:server": "npm run test --workspace=server",
@@ -22,7 +23,8 @@
     "clean": "rimraf client/node_modules server/node_modules node_modules client/dist server/dist",
     "lint": "npm run lint --workspace=client",
     "docker:dev": "docker-compose up --build",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "vercel-build": "npm run build:server && npm run build:client"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
