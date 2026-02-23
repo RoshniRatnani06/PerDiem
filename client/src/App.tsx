@@ -123,11 +123,6 @@ function App() {
                 </div>
               )}
             </div>
-
-            {/* Footer */}
-            <div className="p-4 border-t border-slate-800 dark:border-slate-700 text-center shrink-0">
-              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">© 2024 Per Diem Systems</p>
-            </div>
           </aside>
 
           {/* ── Main Content Area ───────────────────────────────────────────── */}
